@@ -1,8 +1,13 @@
 import sqlite3
-
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
 class DatabaseOfDOOM:
 	def __init__(self):
 		self.con = sqlite3.connect("DatabaseOfDOOM.db")
+		self.con.row_factory = dict_factory
 		self.cur = self.con.cursor()
 
 	def makeDB(self):
