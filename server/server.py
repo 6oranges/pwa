@@ -9,11 +9,12 @@ class RequestHandler(BaseHTTPRequestHandler):
 		if self.path.startswith("/users"):
 			path = self.path.split("/")
 			if len(path) < 3:
-				#be more specific
 				self.send400()
 				return
 			user = path[2]
 			self.send_response(200)
+			self.send_header("Content-Type","application/json")
+			self.send_header("Access-Control-Allow-Origin","*")
 			self.end_headers()
 			self.wfile.write(bytes(json.dumps(DatabaseOfDOOM().getUserByUsername(user)),"utf-8"))
 		else:
@@ -32,6 +33,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 			if DatabaseOfDOOM().addUser(name, password, color):
 				self.send_response(200)
 				self.send_header("Content-Type","application/json")
+				self.send_header("Access-Control-Allow-Origin","*")
 				self.end_headers()
 				self.wfile.write(bytes(json.dumps(DatabaseOfDOOM().getUserByUsername(user)),"utf-8"))
 			else:
@@ -60,7 +62,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 		return self.rfile.read(int(length)).decode("utf-8")
 
 def main():
-	listen = ("", 8080)
+	listen = ("", 80)
 	server = HTTPServer(listen, RequestHandler)
 
 	db = DatabaseOfDOOM()
