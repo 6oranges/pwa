@@ -14,6 +14,7 @@ def main():
 
 	# DB TEST
 	db = DatabaseOfDOOM()
+	db.makeDB()
 	db.addUser("Sensei Doug", "ninjitsu123", "red")
 	print(db.getUserByUsername("Sensei Doug"))
 

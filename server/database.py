@@ -6,15 +6,18 @@ class DatabaseOfDOOM:
 		self.cur = self.con.cursor()
 
 	def makeDB(self):
-		command = "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, password TEXT, color TEXT)"
+		command = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT UNIQUE, password TEXT, color TEXT)"
 		self.cur.execute(command)
 		self.con.commit()
 
 	def addUser(self, name, password, color):
-		command = "INSERT INTO users (name, password, color) VALUES (?, ?, ?)"
-		arguments = [name, password, color]
-		self.cur.execute(command, arguments)
-		self.con.commit()
+		if self.getUserByUsername(name) == None:
+			command = "INSERT INTO users (name, password, color) VALUES (?, ?, ?)"
+			arguments = [name, password, color]
+			self.cur.execute(command, arguments)
+			self.con.commit()
+		else:
+			return "That didn't work."
 
 	def getUserByUsername(self, name):
 		command = "SELECT * FROM users WHERE name = ?"
