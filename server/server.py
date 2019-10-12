@@ -23,10 +23,16 @@ class RequestHandler(BaseHTTPRequestHandler):
 	def do_POST(self):
 		if self.path.startswith("/users"):
 			try:
+				body = json.loads(self.getBody())
+				name = body["name"]
+				password = body["password"]
+				color = body["color"]
+				"""
 				body = parse_qs(self.getBody())
 				name = body["name"][0]
 				password = body["password"][0]
 				color = body["color"][0]
+				"""
 			except:
 				self.send400()
 				return
