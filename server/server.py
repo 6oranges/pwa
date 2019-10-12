@@ -31,6 +31,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 				return
 			if DatabaseOfDOOM().addUser(name, password, color):
 				self.send_response(200)
+				self.send_header("Content-Type","application/json")
 				self.end_headers()
 				self.wfile.write(bytes(json.dumps(DatabaseOfDOOM().getUserByUsername(user)),"utf-8"))
 			else:
@@ -40,6 +41,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 	def send400(self,message="Bad request: What are you trying to do?! (´・ω・｀)"):
 		self.send_response(400)
+		
 		self.end_headers()
 		self.wfile.write(bytes(message, "utf-8"))
 
@@ -58,7 +60,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 		return self.rfile.read(int(length)).decode("utf-8")
 
 def main():
-	listen = ("127.0.0.1", 8080)
+	listen = ("", 8080)
 	server = HTTPServer(listen, RequestHandler)
 
 	db = DatabaseOfDOOM()
