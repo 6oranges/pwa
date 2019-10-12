@@ -4,10 +4,6 @@ from database import DatabaseOfDOOM
 from urllib.parse import parse_qs
 import json
 
-import BaseHTTPServer, SimpleHTTPServer
-import ssl
-
-
 class RequestHandler(BaseHTTPRequestHandler):
 	def do_GET(self):
 		if self.path.startswith("/users"):
@@ -34,12 +30,6 @@ class RequestHandler(BaseHTTPRequestHandler):
 				name = parsedBody["name"]
 				password = parsedBody["password"]
 				color = parsedBody["color"]
-				"""
-				body = parse_qs(self.getBody())
-				name = body["name"][0]
-				password = body["password"][0]
-				color = body["color"][0]
-				"""
 			except:
 				self.send400()
 				return
@@ -84,8 +74,8 @@ class RequestHandler(BaseHTTPRequestHandler):
 		return self.rfile.read(int(length)).decode("utf-8")
 
 def main():
-	#listen = ("", 80)
-	#server = HTTPServer(listen, RequestHandler)
+	listen = ("", 80)
+	server = HTTPServer(listen, RequestHandler)
 
 	db = DatabaseOfDOOM()
 	db.makeDB()
@@ -93,8 +83,5 @@ def main():
 
 	print("Listening...")
 	server.serve_forever()
-	httpd = BaseHTTPServer.HTTPServer(('localhost', 4443), HTTPServer.RequestHandler)
-	httpd.socket = ssl.wrap_socket (httpd.socket, certfile='./server.pem', server_side=True)
-	httpd.serve_forever()
 
 main()
