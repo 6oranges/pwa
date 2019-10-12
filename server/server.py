@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from database import DatabaseOfDOOM
 
 class RequestHandler(BaseHTTPRequestHandler):
 	def do_GET(self):
@@ -10,6 +11,12 @@ class RequestHandler(BaseHTTPRequestHandler):
 def main():
 	listen = ("127.0.0.1", 8080)
 	server = HTTPServer(listen, RequestHandler)
+
+	# DB TEST
+	db = DatabaseOfDOOM()
+	db.addUser("Sensei Doug", "ninjitsu123", "red")
+	print(db.getUserByUsername("Sensei Doug"))
+
 	print("Listening...")
 	server.serve_forever()
 
