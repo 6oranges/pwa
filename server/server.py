@@ -23,10 +23,13 @@ class RequestHandler(BaseHTTPRequestHandler):
 	def do_POST(self):
 		if self.path.startswith("/users"):
 			try:
-				body = json.loads(self.getBody())
-				name = body["name"]
-				password = body["password"]
-				color = body["color"]
+				body = self.getBody()
+				print(body)
+				parsedBody = json.loads(body)
+				print(parsedBody)
+				name = parsedBody["name"]
+				password = parsedBody["password"]
+				color = parsedBody["color"]
 				"""
 				body = parse_qs(self.getBody())
 				name = body["name"][0]
@@ -41,14 +44,23 @@ class RequestHandler(BaseHTTPRequestHandler):
 				self.send_header("Content-Type","application/json")
 				self.send_header("Access-Control-Allow-Origin","*")
 				self.end_headers()
-				self.wfile.write(bytes(json.dumps(DatabaseOfDOOM().getUserByUsername(user)),"utf-8"))
+				self.wfile.write(bytes(json.dumps(DatabaseOfDOOM().getUserByUsername(name)),"utf-8"))
 			else:
 				self.send400("User already exists")
 		else:
 			self.send404()
 
+	def do_OPTIONS(self):
+		self.send_response(200, "ok")
+		self.send_header('Access-Control-Allow-Origin', '*')
+		self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST')
+		self.send_header("Access-Control-Allow-Headers", "X-Requested-With")
+		self.send_header("Access-Control-Allow-Headers", "Content-Type")
+		self.end_headers()
+
 	def send400(self,message="Bad request: What are you trying to do?! (´・ω・｀)"):
 		self.send_response(400)
+		self.send_header("Access-Control-Allow-Origin","*")
 		
 		self.end_headers()
 		self.wfile.write(bytes(message, "utf-8"))
